@@ -8,10 +8,10 @@ before_script:
   - npm install
 script:
   - npm test
-  - docker build -t back .
+  - docker build -t covid19-tracker .
 after_success:
   - docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
-  - docker tag back $DOCKER_USER/back:$TRAVIS_BUILD_NUMBER
-  - docker push $DOCKER_USER/back:$TRAVIS_BUILD_NUMBER
-  - docker tag back $DOCKER_USER/back:latest
-  - docker push $DOCKER_USER/back:latest
+  - docker tag covid19-tracker $DOCKER_USER/back:$TRAVIS_BUILD_NUMBER
+  - docker push $DOCKER_USER/covid19-tracker:$TRAVIS_BUILD_NUMBER
+  - docker tag back $DOCKER_USER/covid19-tracker:latest
+  - docker push $DOCKER_USER/covid19-tracker:latest
