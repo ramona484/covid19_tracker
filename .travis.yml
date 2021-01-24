@@ -7,8 +7,7 @@ services:
 before_script:
   - npm install
 script:
-  - npm test
-  - docker build -t covid19-tracker .
+   - docker build -t covid19-tracker .
 after_success:
   - docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
   - docker tag covid19-tracker $DOCKER_USER/back:$TRAVIS_BUILD_NUMBER
