@@ -4,10 +4,10 @@ WORKDIR /app
 COPY package.json ./
 COPY package-lock.json ./
 RUN npm install 
-COPY . ./
+COPY . .
 RUN npm run build
 
-# prod environment
+# production environment
 FROM nginx:stable-alpine
 COPY --from=builder /app/build /usr/share/nginx/html
 EXPOSE 80
