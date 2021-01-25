@@ -3,58 +3,47 @@ name: AWS ECR
 # Controls when the action will run. 
 
 on:
-
-push:
-
-branches: master
-
-# Triggers the workflow on push or pull request events but only for the master branch
+  push:
+    branches: master
 
 jobs:
 
-build-and-push:
+  build-and-push:
 
-runs-on: ubuntu-latest
-
-steps:
+  runs-on: ubuntu-latest
+  steps:
 
 - name: Check out
-
-uses: actions/checkout@v2
-
-- name: Hadolint
+  uses: actions/checkout@v2
   
-uses: brpaz/hadolint-action@v1.2.1
-with: 
-dockerfile: Dockerfile
+- name: hadolint
+  uses: brpaz/hadolint-action@v1.2.1
+  with: 
+    dockerfile: Dockerfile
           
 - name: trufflehog-actions-scan
   uses: edplato/trufflehog-actions-scan@master
 
-
 - name: Set up QEMU
-
-uses: docker/setup-qemu-action@v1
+  uses: docker/setup-qemu-action@v1
 
 - name: Set up Docker Buildx
-
-uses: docker/setup-buildx-action@v1
+  uses: docker/setup-buildx-action@v1
 
 - uses: kciter/aws-ecr-action@master
+  with:
 
-with:
+    access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
 
-access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+    secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
-secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+    account_id: ${{ secrets.AWS_ACCOUNT_ID }}
 
-account_id: ${{ secrets.AWS_ACCOUNT_ID }}
+    repo: docker/repo
 
-repo: docker/repo
+    region: us-east-1
 
-region: us-east-1
+    tags: latest,${{ github.sha }}
 
-tags: latest,${{ github.sha }}
-
-create_repo: true
+    create_repo: true
 
