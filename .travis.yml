@@ -4,10 +4,19 @@ node_js:
   - "12"
 sudo: required
 
+
 jobs:
   include:
-    bash hadolint.sh
 
+- stage: Leaks
+        language: generic
+        script:
+          - "./hadolint.sh"
+
+- stage: Leaks
+      language: generic
+      script:
+        - "./leaks.sh"
 services:
   - docker
 before_script:
