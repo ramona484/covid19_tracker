@@ -10,40 +10,35 @@ jobs:
 
   build-and-push:
 
-  runs-on: ubuntu-latest
-  steps:
-
-- name: Check out
-  uses: actions/checkout@v2
+    runs-on: ubuntu-latest
   
-- name: hadolint
-  uses: brpaz/hadolint-action@v1.2.1
-  with: 
-    dockerfile: Dockerfile
-          
-- name: trufflehog-actions-scan
-  uses: edplato/trufflehog-actions-scan@master
+    steps:
 
-- name: Set up QEMU
-  uses: docker/setup-qemu-action@v1
+    - name: Check out
+      uses: actions/checkout@v2
 
-- name: Set up Docker Buildx
-  uses: docker/setup-buildx-action@v1
+    - name: hadolint
+      uses: brpaz/hadolint-action@v1.2.1
+      with: 
+        dockerfile: Dockerfile
 
-- uses: kciter/aws-ecr-action@master
-  with:
+    - name: trufflehog-actions-scan
+      uses: edplato/trufflehog-actions-scan@master
 
-    access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+    - name: Set up QEMU
+      uses: docker/setup-qemu-action@v1
 
-    secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v1
 
-    account_id: ${{ secrets.AWS_ACCOUNT_ID }}
+    - uses: kciter/aws-ecr-action@master
+      with:
+        access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        account_id: ${{ secrets.AWS_ACCOUNT_ID }}
+        repo: docker/repo
+        region: us-east-1
+        tags: latest,${{ github.sha }}
 
-    repo: docker/repo
-
-    region: us-east-1
-
-    tags: latest,${{ github.sha }}
-
-    create_repo: true
+        create_repo: true
 
