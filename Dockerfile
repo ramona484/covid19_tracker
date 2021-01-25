@@ -1,7 +1,7 @@
 # build environment
 FROM node:14.15.4-alpine3.12 as builder
 WORKDIR /app
-COPY package.json ./
+ADD package.json ./
 COPY package-lock.json ./
 RUN npm install 
 COPY . .
