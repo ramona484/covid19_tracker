@@ -4,10 +4,16 @@ node_js:
   - "12"
 sudo: required
 
+env:
+  # Path to 'hadolint' binary
+  HADOLINT: "${HOME}/hadolint"
+
 services:
   - docker
 before_script:
   - npm install
+  - curl -sL -o ${HADOLINT} "https://github.com/hadolint/hadolint/releases/download/v1.17.6/hadolint-$(uname -s)-$(uname -m)"
+      && chmod 700 ${HADOLINT}
 script:
   - hadolint.sh
    - docker build -t covid19-tracker .
