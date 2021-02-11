@@ -16,6 +16,19 @@ jobs:
 
     - name: Check out
       uses: actions/checkout@v2
+    
+    - name: Build an image from Dockerfile
+      run: |
+          docker build -t docker.io/my-organization/my-app:${{ github.sha }} .
+      
+    - name: Run Trivy vulnerability scanner
+      uses: aquasecurity/trivy-action@master
+      with:
+          image-ref: 'docker.io/my-organization/my-app:${{ github.sha }}'
+          format: 'table'
+          exit-code: '1'
+          ignore-unfixed: true
+          severity: 'CRITICAL,HIGH'
 
     - name: hadolint
       uses: brpaz/hadolint-action@v1.2.1
