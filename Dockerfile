@@ -1,9 +1,8 @@
 # build environment
 FROM node:14.15.4-alpine3.12 as builder
 WORKDIR /app
-ADD package.json ./
-COPY package-lock.json ./
-RUN npm install 
+COPY package*.json ./
+RUN npm ci --only=production
 COPY . .
 RUN npm run build
 

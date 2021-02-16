@@ -1,0 +1,108 @@
+version: 2.1
+orbs:
+  ggshield: gitguardian/ggshield@volatile
+  trivy: signavio/trivy@1.1.0
+
+executors:
+  docker-publisher:
+    environment:
+      IMAGE_NAME: ramona84/node-security
+    docker:
+      - image: circleci/buildpack-deps:stretch
+jobs:
+
+  container-scan:
+    docker:
+      - image: docker:stable-git
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run:
+          name: Build image
+          command: docker build -t trivy-ci-test:${CIRCLE_SHA1} .
+      - run:
+          name: Install trivy
+          command: |
+            apk add --update-cache --upgrade curl
+            VERSION=$(
+                curl --silent "https://api.github.com/repos/aquasecurity/trivy/releases/latest" | \
+                grep '"tag_name":' | \
+                sed -E 's/.*"v([^"]+)".*/\1/'
+            )
+            wget https://github.com/aquasecurity/trivy/releases/download/v${VERSION}/trivy_${VERSION}_Linux-64bit.tar.gz
+            tar zxvf trivy_${VERSION}_Linux-64bit.tar.gz
+            mv trivy /usr/local/bin
+      - run:
+          name: Scan the local image with trivy
+          command: trivy --exit-code 0 --no-progress trivy-ci-test:${CIRCLE_SHA1}
+
+  dockle:
+    docker:
+      - image: docker:19.03-git
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run:
+          command: |
+            wget https://github.com/goodwithtech/dockle/releases/download/v0.2.0/dockle_0.2.0_Linux-64bit.tar.gz
+            tar zxvf dockle_0.2.0_Linux-64bit.tar.gz
+            mv dockle /usr/local/bin
+      - run:
+          command: |
+            dockle --exit-code 0 python:3.4-alpine
+  build:
+    executor: docker-publisher
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run:
+          name: Build Docker image
+          command: |
+            docker build -t $IMAGE_NAME:latest .
+      - run:
+          name: Archive Docker image
+          command: docker save -o image.tar $IMAGE_NAME
+      - persist_to_workspace:
+          root: .
+          paths:
+            - ./image.tar
+  publish-latest:
+    executor: docker-publisher
+    steps:
+      - attach_workspace:
+          at: /tmp/workspace
+      - setup_remote_docker
+      - run:
+          name: Load archived Docker image
+          command: docker load -i /tmp/workspace/image.tar
+      - run:
+          name: Publish Docker Image to Docker Hub
+          command: |
+            echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
+            docker push $IMAGE_NAME:latest
+workflows:
+  version: 2
+  build-master:
+    jobs:
+      - container-scan:
+          filters:
+            branches:
+              only: master
+      - ggshield/scan:
+          name: ggshield-scan
+          base_revision: << pipeline.git.base_revision >>
+          revision: <<pipeline.git.revision>>
+      - dockle:
+          filters:
+            branches:
+              only: master
+      - build:
+          filters:
+            branches:
+              only: master
+      - publish-latest:
+          requires:
+            - build
+          filters:
+            branches:
+              only: master

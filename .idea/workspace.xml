@@ -1,7 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="e8054203-4c8e-437f-a0b4-4190e5ab0692" name="Default Changelist" comment="" />
+    <list default="true" id="e8054203-4c8e-437f-a0b4-4190e5ab0692" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_1_24_2021_6_20_AM_[Default_Changelist]/shelved.patch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_1_24_2021_6_20_AM__Default_Changelist_.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.travis.yml" beforeDir="false" afterPath="$PROJECT_DIR$/.travis.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/index.js" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -36,7 +43,147 @@
       <option name="project" value="LOCAL" />
       <updated>1611296658985</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="added travis.yml">
+      <created>1611465459809</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1611465459809</updated>
+    </task>
+    <task id="LOCAL-00003" summary="added travis.yml">
+      <created>1611465547068</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1611465547068</updated>
+    </task>
+    <task id="LOCAL-00004" summary="added travis.yml">
+      <created>1611465596987</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1611465596987</updated>
+    </task>
+    <task id="LOCAL-00005" summary="deleted package-lock.json">
+      <created>1611467056358</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1611467056359</updated>
+    </task>
+    <task id="LOCAL-00006" summary="deleted package-lock.json">
+      <created>1611468828720</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1611468828720</updated>
+    </task>
+    <task id="LOCAL-00007" summary="updated dockerfile">
+      <created>1611468982649</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1611468982649</updated>
+    </task>
+    <task id="LOCAL-00008" summary="deleted yarn">
+      <created>1611470103958</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1611470103958</updated>
+    </task>
+    <task id="LOCAL-00009" summary="updated dockerfile">
+      <created>1611470956081</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1611470956081</updated>
+    </task>
+    <task id="LOCAL-00010" summary="updated dockerfile">
+      <created>1611471972649</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1611471972650</updated>
+    </task>
+    <task id="LOCAL-00011" summary="added nginx.conf">
+      <created>1611532132872</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1611532132872</updated>
+    </task>
+    <task id="LOCAL-00012" summary="modified nginx.conf">
+      <created>1611532679900</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1611532679900</updated>
+    </task>
+    <task id="LOCAL-00013" summary="updated travis.yml">
+      <created>1611533985019</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1611533985019</updated>
+    </task>
+    <task id="LOCAL-00014" summary="updated dockerfile">
+      <created>1611537790153</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1611537790153</updated>
+    </task>
+    <task id="LOCAL-00015" summary="added hadolint">
+      <created>1611558657156</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1611558657156</updated>
+    </task>
+    <task id="LOCAL-00016" summary="added hadolint">
+      <created>1611559354445</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1611559354445</updated>
+    </task>
+    <task id="LOCAL-00017" summary="added hadolint">
+      <created>1611559852328</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1611559852328</updated>
+    </task>
+    <task id="LOCAL-00018" summary="added hadolint">
+      <created>1611560049966</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1611560049966</updated>
+    </task>
+    <task id="LOCAL-00019" summary="added hadolint">
+      <created>1611560381970</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1611560381970</updated>
+    </task>
+    <task id="LOCAL-00020" summary="added gitleaks">
+      <created>1611561185656</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1611561185656</updated>
+    </task>
+    <task id="LOCAL-00021" summary="added gitleaks">
+      <created>1611561484186</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1611561484186</updated>
+    </task>
+    <option name="localTasksCounter" value="22" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -49,9 +196,19 @@
         </entry>
       </map>
     </option>
+    <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Added Dockerfile" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added Dockerfile" />
+    <MESSAGE value="added travis.yml" />
+    <MESSAGE value="deleted package-lock.json" />
+    <MESSAGE value="deleted yarn" />
+    <MESSAGE value="added nginx.conf" />
+    <MESSAGE value="modified nginx.conf" />
+    <MESSAGE value="updated travis.yml" />
+    <MESSAGE value="updated dockerfile" />
+    <MESSAGE value="added hadolint" />
+    <MESSAGE value="added gitleaks" />
+    <option name="LAST_COMMIT_MESSAGE" value="added gitleaks" />
   </component>
 </project>
