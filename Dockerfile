@@ -1,10 +1,11 @@
 # build environment
-FROM node:14.15.4-alpine3.12 as builder
+FROM node:lts-alpine as builder
 WORKDIR /app
 COPY package*.json ./
+RUN npm ci 
 COPY . .
-RUN npm ci --only=production
 RUN npm run build
+
 
 # production environment
 FROM nginx:stable-alpine

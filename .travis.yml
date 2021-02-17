@@ -1,15 +1,23 @@
 
 env:
   global:
+    - DOCKER_REPO=docker/repo
+    - EB_REGION="us-east-1"
+    - secure: $AWS_ACCOUNT_ID
+    - secure: $AWS_ACCESS_KEY_ID
+    - secure: $AWS_SECRET_ACCESS_KEY
     - COMMIT=${TRAVIS_COMMIT::8}
+
 
 jobs:
   include:
     - name: GitGuardian Scan
       language: python
       python: 3.8
+
       install:
         - pip install ggshield
+        - pip install awscli
       script:
         - ggshield scan ci
 
@@ -37,17 +45,17 @@ jobs:
       before_script:
          - npm install
       script:
-         -  docker build -t covid19-tracker .
+         -  docker build -t $DOCKER_REPO .
          - ./trivy --exit-code 0 --severity HIGH --no-progress trivy-ci-test:${COMMIT}
          - ./trivy --exit-code 1 --severity CRITICAL --no-progress trivy-ci-test:${COMMIT}
          - ./dockle --exit-code 1 dockle-ci-test:${COMMIT}
          
-      after_success:
-         - docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
-         - docker tag covid19-tracker $DOCKER_USER/covid19-tracker:$TRAVIS_BUILD_NUMBER
-         - docker push $DOCKER_USER/covid19-tracker:$TRAVIS_BUILD_NUMBER
-         - docker tag covid19-tracker $DOCKER_USER/covid19-tracker:latest
-         - docker push $DOCKER_USER/covid19-tracker:latest
+      deploy:
+        provider: script
+        script: bash docker_push.sh
+        on:
+          branch: master
+
       
       cache:
          directories:
