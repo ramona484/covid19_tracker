@@ -13,8 +13,6 @@ jobs:
     - name: GitGuardian Scan
       language: python
       python: 3.8
-      before_install:
-         - pip install awscli
       install:
         - pip install ggshield
       script:
@@ -54,14 +52,8 @@ jobs:
          - docker tag covid19-tracker $DOCKER_USER/covid19-tracker:$TRAVIS_BUILD_NUMBER
          - docker push $DOCKER_USER/covid19-tracker:$TRAVIS_BUILD_NUMBER
          - docker tag covid19-tracker $DOCKER_USER/covid19-tracker:latest
-         - docker push $DOCKER_USER/covid19-tracker:la
+         - docker push $DOCKER_USER/covid19-tracker:latest
       
-      deploy:
-        provider: script
-        script: bash docker_push.sh
-        on:
-          branch: master
-
       cache:
          directories:
            - $HOME/.cache/trivy
