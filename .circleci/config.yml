@@ -8,7 +8,7 @@ orbs:
 executors:
   docker-publisher:
     environment:
-      IMAGE_NAME: ramona84/node-security
+      IMAGE_NAME: ramona84/covid19-tracker
     docker:
       - image: circleci/buildpack-deps:stretch
 jobs:
