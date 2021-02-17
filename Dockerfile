@@ -5,7 +5,7 @@ WORKDIR app
 ADD package*.json ./
 
 RUN npm ci --only=production
-ADD . .
+COPY . .
 RUN npm run build
 
 
