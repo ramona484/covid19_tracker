@@ -2,6 +2,7 @@ version: 2.1
 orbs:
   ggshield: gitguardian/ggshield@volatile
   trivy: signavio/trivy@1.1.0
+  aws-ecr: circleci/aws-ecr@6.15.3
    
 
 executors:
@@ -53,37 +54,23 @@ jobs:
       - run:
           command: |
             dockle --exit-code 0 python:3.4-alpine
-  build:
-    executor: docker-publisher
-    steps:
-      - checkout
-      - setup_remote_docker:
-           version: 19.03.13
-      - run:
-          name: Build Docker image
-          command: |
-            docker build -t $IMAGE_NAME:latest .
-      - run:
-          name: Archive Docker image
-          command: docker save -o image.tar $IMAGE_NAME
-      - persist_to_workspace:
-          root: .
-          paths:
-            - ./image.tar
-  publish-latest:
-    executor: docker-publisher
-    steps:
-      - attach_workspace:
-          at: /tmp/workspace
-      - setup_remote_docker
-      - run:
-          name: Load archived Docker image
-          command: docker load -i /tmp/workspace/image.tar
-      - run:
-          name: Publish Docker Image to Docker Hub
-          command: |
-            echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
-            docker push $IMAGE_NAME:latest
+    
+    build:
+      aws-ecr/build-and-push-image:
+      - account-url: AWS_ECR_ACCOUNT_URL_ENV_VAR_NAME
+      - aws-access-key-id: ACCESS_KEY_ID_ENV_VAR_NAME
+      - aws-secret-access-key: SECRET_ACCESS_KEY_ENV_VAR_NAME
+      - context: AWS
+      - create-repo: true
+      - dockerfile: myDockerfile
+      - no-output-timeout: 20m
+      - path: pathToMyDockerfile
+      - profile-name: myProfileName
+      - region: AWS_REGION_ENV_VAR_NAME
+      - repo: docker/repo
+      - skip-when-tags-exist: false
+      - tag: 'latest,myECRRepoTag'
+
 workflows:
   version: 2
   build-master:
@@ -101,12 +88,6 @@ workflows:
             branches:
               only: master
       - build:
-          filters:
-            branches:
-              only: master
-      - publish-latest:
-          requires:
-            - build
           filters:
             branches:
               only: master
