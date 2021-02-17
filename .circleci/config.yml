@@ -18,8 +18,8 @@ jobs:
       - image: docker:stable-git
     steps:
       - checkout
-      - setup_remote_docker
-        version: 19.03.13
+      - setup_remote_docker:
+          version: 19.03.13
       - run:
           name: Build image
           command: docker build -t trivy-ci-test:${CIRCLE_SHA1} .
