@@ -2,8 +2,8 @@
 FROM node:14.15.4-alpine3.12 as builder
 WORKDIR /app
 COPY package*.json ./
-RUN npm ci --only=production
 COPY . .
+RUN npm ci --only=production
 RUN npm run build
 
 # production environment
