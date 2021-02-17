@@ -1,3 +1,4 @@
+sudo: required
 
 env:
   global:
@@ -24,7 +25,7 @@ jobs:
       language: node_js
       node_js:
          - "14"
-      sudo: required
+      
       dist: trusty
 
       services:
@@ -49,14 +50,15 @@ jobs:
          - ./trivy --exit-code 1 --severity CRITICAL --no-progress trivy-ci-test:${COMMIT}
          - ./dockle --exit-code 1 dockle-ci-test:${COMMIT}
        
-    - name: Push to AWS ECR
-      language: python
-      install:
-        - pip install awscli   
-      deploy:
-        provider: script
-        script: bash docker_push.sh
-     
+      after_success:
+         - docker --version  # document the version travis is using
+         - pip install --user awscli # install aws cli w/o sudo
+         - export PATH=$PATH:$HOME/.local/bin # put aws in the path
+         - eval $(aws ecr get-login --region us-east-1) #needs AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY envvars
+         - docker build -t docker/repo .
+         - docker tag docker/repo:latest [your_ecr_account].dkr.ecr.us-east-1.amazonaws.com/docker/repo:latest
+         - docker push [your_ecr_account].dkr.ecr.us-east-1.amazonaws.com/docker/repo:latest
+      
       cache:
          directories:
            - $HOME/.cache/trivy
