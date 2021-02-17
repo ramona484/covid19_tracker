@@ -13,10 +13,12 @@ jobs:
         with:
           fetch-depth: 0 
                
-      - name: Dockerfile linting  
-        uses: brpaz/hadolint-action@v1.2.1
+      - name: Dockle
+        uses: hands-lab/dockle-action@v1
         with:
-          dockerfile: Dockerfile
+          image: covid19_tracker
+          exit-code: '1'
+          exit-level: WARN
           
       - name: GitGuardian scan
         uses: GitGuardian/gg-shield-action@master
