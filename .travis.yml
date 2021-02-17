@@ -13,6 +13,8 @@ jobs:
     - name: GitGuardian Scan
       language: python
       python: 3.8
+      before_install:
+         - pip install awscli
       install:
         - pip install ggshield
       script:
@@ -29,7 +31,6 @@ jobs:
          - docker
 
       before_install:
-         - pip install awscli
          - export PATH=$PATH:$HOME/.local/bin
          - docker build -t trivy-ci-test:${COMMIT} .
          - export VERSION=$(curl --silent "https://api.github.com/repos/aquasecurity/trivy/releases/latest" | grep '"tag_name":' | sed -E 's/.*"v([^"]+)".*/\1/')
