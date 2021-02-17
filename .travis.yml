@@ -37,11 +37,11 @@ jobs:
       before_script:
          - npm install
       script:
+         -  docker build -t covid19-tracker .
          - ./trivy --exit-code 0 --severity HIGH --no-progress trivy-ci-test:${COMMIT}
          - ./trivy --exit-code 1 --severity CRITICAL --no-progress trivy-ci-test:${COMMIT}
          - ./dockle --exit-code 1 dockle-ci-test:${COMMIT}
-         -  docker build -t covid19-tracker .
-
+         
       after_success:
          - docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
          - docker tag covid19-tracker $DOCKER_USER/covid19-tracker:$TRAVIS_BUILD_NUMBER
