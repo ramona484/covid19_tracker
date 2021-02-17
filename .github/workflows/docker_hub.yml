@@ -1,7 +1,7 @@
 name: push to Docker Hub
 on:
   push:
-    branches: main
+    branches: master
 
 jobs:
   path-context:
@@ -10,10 +10,7 @@ jobs:
       
       - name: Checkout
         uses: actions/checkout@v2
-        
-      - name: Trufflehog secrets scan
-        uses: edplato/trufflehog-actions-scan@master 
-        
+               
       - name: Dockerfile linting  
         uses: brpaz/hadolint-action@v1.2.1
         with:
