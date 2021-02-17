@@ -9,7 +9,7 @@ executors:
     environment:
       IMAGE_NAME: ramona84/covid19-tracker
     docker:
-      - image: cimg/node:latest
+     - image: circleci/buildpack-deps:stretch
 
 jobs:
 
@@ -56,7 +56,8 @@ jobs:
     executor: docker-publisher
     steps:
       - checkout
-      - setup_remote_docker
+      - setup_remote_docker:
+           version: 19.03.13
       - run:
           name: Build Docker image
           command: |
