@@ -86,24 +86,7 @@ jobs:
             echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
             docker push $IMAGE_NAME:latest
 
-  build_and_push_image:
-    executor: docker-publisher
-    steps:
-      - aws-ecr/build-and-push-image:
-          account-url: AWS_ECR_ACCOUNT_URL_ENV_VAR_NAME
-          aws-access-key-id: ACCESS_KEY_ID_ENV_VAR_NAME
-          aws-secret-access-key: SECRET_ACCESS_KEY_ENV_VAR_NAME
-          context: AWS
-          create-repo: true
-          dockerfile: Dockerfile
-          no-output-timeout: 20m
-          path: pathToMyDockerfile
-          profile-name: myProfileName
-          region: AWS_REGION_ENV_VAR_NAME
-          repo: docker/repo
-          skip-when-tags-exist: false
-          tag: 'latest,myECRRepoTag'
-
+  
 
 workflows:
   version: 2
@@ -125,7 +108,4 @@ workflows:
           filters:
             branches:
               only: master
-      - build_and_push_image:
-          filters:
-            branches:
-              only: master
+
