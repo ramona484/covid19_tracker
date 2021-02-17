@@ -10,7 +10,8 @@ executors:
     environment:
       IMAGE_NAME: ramona84/covid19-tracker
     docker:
-      - image: circleci/buildpack-deps:stretch
+      - image: cimg/node:latest
+
 jobs:
 
   container-scan:
