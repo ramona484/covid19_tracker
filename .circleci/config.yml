@@ -3,6 +3,7 @@ orbs:
   ggshield: gitguardian/ggshield@volatile
   trivy: signavio/trivy@1.1.0
   aws-ecr: circleci/aws-ecr@6.15.3
+  docker: circleci/docker@1.5.0
    
 
 executors:
