@@ -55,8 +55,8 @@ jobs:
          - export PATH=$PATH:$HOME/.local/bin # put aws in the path
          - eval $(aws ecr get-login --region us-east-1) #needs AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY envvars
          - docker build -t docker/repo .
-         - docker tag docker/repo:latest [your_ecr_account].dkr.ecr.us-east-1.amazonaws.com/docker/repo:latest
-         - docker push [your_ecr_account].dkr.ecr.us-east-1.amazonaws.com/docker/repo:latest
+         - docker tag docker/repo:latest 335319979316.dkr.ecr.us-east-1.amazonaws.com/docker/repo:latest
+         - docker push 335319979316.dkr.ecr.us-east-1.amazonaws.com/docker/repo:latest
       
       cache:
          directories:
