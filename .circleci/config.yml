@@ -19,4 +19,4 @@ workflows:
           region: AWS_REGION_ENV_VAR_NAME
           repo: docker/repo
           skip-when-tags-exist: false
-          tag: 'latest, myECRRepoTag'
+          tag: 'latest'
