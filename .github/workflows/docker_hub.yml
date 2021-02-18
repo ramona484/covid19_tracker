@@ -18,7 +18,12 @@ jobs:
         with:
           image: ramona84/covid19_tracker
           exit-code: '1'
-          exit-level: WARN
+          exit-level: FATAL
+          
+      - name: Dockerfile linting  
+        uses: brpaz/hadolint-action@v1.2.1
+        with:
+          dockerfile: Dockerfile    
           
       - name: GitGuardian scan
         uses: GitGuardian/gg-shield-action@master
