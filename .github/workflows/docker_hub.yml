@@ -16,7 +16,7 @@ jobs:
       - name: Dockle
         uses: hands-lab/dockle-action@v1
         with:
-          image: covid19_tracker
+          image: ramona84/covid19_tracker
           exit-code: '1'
           exit-level: WARN
           
