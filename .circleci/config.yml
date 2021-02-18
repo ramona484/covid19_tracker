@@ -41,14 +41,6 @@ jobs:
           name: Scan the local image with trivy
           command: trivy --exit-code 0 --no-progress trivy-ci-test:${CIRCLE_SHA1}
 
-  lint:
-    executor: docker/machine
-    steps:
-        - checkout
-        - docker/dockerlint:
-            dockerfile: /Dockerfile
-            treat-warnings-as-errors: true  
-
   dockle:
     docker:
       - image: docker:19.03-git
@@ -63,6 +55,15 @@ jobs:
       - run:
           command: |
             dockle --exit-code 0 python:3.4-alpine
+
+  lint:
+    executor: docker/machine
+    steps:
+        - checkout
+        - docker/dockerlint:
+            dockerfile: /Dockerfile
+            treat-warnings-as-errors: true  
+
   build:
     executor: docker-publisher
     steps:
@@ -108,11 +109,11 @@ workflows:
           name: ggshield-scan
           base_revision: << pipeline.git.base_revision >>
           revision: <<pipeline.git.revision>>
-      - lint:
+      - dockle:
           filters:
             branches:
               only: master
-      - dockle:
+      - lint:
           filters:
             branches:
               only: master
