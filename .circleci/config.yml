@@ -14,7 +14,7 @@ workflows:
           create-repo: true
           dockerfile: Dockerfile
           no-output-timeout: 20m
-          path: /root
+          path: /
           profile-name: myProfileName
           region: AWS_REGION_ENV_VAR_NAME
           repo: docker/repo
