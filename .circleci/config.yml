@@ -8,11 +8,11 @@ workflows:
       - aws-ecr/build-and-push-image:
           account-url: AWS_ECR_ACCOUNT_URL
           region: AWS_DEFAULT_REGION
-          repo: 'docker/repo'
+          repo: '${MY_APP_PREFIX}'
           tag: '${CIRCLE_SHA1}'
       - aws-ecs/deploy-service-update:
           cluster-name: 'myCluster'
-          container-image-name-updates: 'container=docker/repo-service,tag=${CIRCLE_SHA1}'
+          container-image-name-updates: 'container=${MY_APP_PREFIX}-service,tag=${CIRCLE_SHA1}'
           family: 'Covid19-Tracker'
           requires:
             - aws-ecr/build-and-push-image
