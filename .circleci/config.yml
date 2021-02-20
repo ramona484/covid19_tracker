@@ -12,7 +12,7 @@ workflows:
           tag: '${CIRCLE_SHA1}'
       - aws-ecs/deploy-service-update:
           cluster-name: 'myCluster'
-          container-image-name-updates: 'container=tracker-service,tag=${CIRCLE_SHA1}'
+          container-image-name-updates: 'container=tracker,tag=${CIRCLE_SHA1}'
           family: 'Covid19Tracker'
           requires:
             - aws-ecr/build-and-push-image
