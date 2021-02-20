@@ -13,7 +13,7 @@ jobs:
           aws-secret-access-key: AWS_SECRET_ACCESS_KEY
       - aws-ecs/update-service:
           cluster-name: 'myCluster'
-          container-image-name-updates: 'container=tracker,tag=stable'
+          container-image-name-updates: 'container=tracker-service,tag=stable'
           family: 'Covid19Tracker'
 workflows:
   deploy:
