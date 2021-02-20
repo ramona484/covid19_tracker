@@ -14,7 +14,7 @@ jobs:
       - aws-ecs/update-service:
           cluster-name: 'myCluster'
           container-image-name-updates: 'container=tracker,tag=stable'
-          family: 'tracker'
+          family: 'Covid19Tracker'
 workflows:
   deploy:
     jobs:
