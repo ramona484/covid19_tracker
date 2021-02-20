@@ -29,6 +29,43 @@ jobs:
         
     - name: Checkout
       uses: actions/checkout@v1
+      with:
+          fetch-depth: 0 
+          
+    - name: Dockle
+      uses: hands-lab/dockle-action@v1
+      with:
+         image: ramona84/covid19_tracker
+         exit-code: '1'
+         exit-level: FATAL
+          
+    - name: Dockerfile linting  
+      uses: brpaz/hadolint-action@v1.2.1
+      with:
+          dockerfile: Dockerfile    
+          
+    - name: GitGuardian scan
+      uses: GitGuardian/gg-shield-action@master
+      env:
+         GITHUB_PUSH_BEFORE_SHA: ${{ github.event.before }}
+         GITHUB_PUSH_BASE_SHA: ${{ github.event.base }}
+         GITHUB_PULL_BASE_SHA: ${{ github.event.pull_request.base.sha }}
+         GITHUB_DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
+         GITGUARDIAN_API_KEY: ${{ secrets.GITGUARDIAN_API_KEY }}
+
+
+    - name: Build an image from Dockerfile
+      run: |
+         docker build -t docker.io/my-organization/my-app:${{ github.sha }} .
+      
+    - name: Run Trivy vulnerability scanner
+      uses: aquasecurity/trivy-action@master
+      with:
+          image-ref: 'docker.io/my-organization/my-app:${{ github.sha }}'
+          format: 'table'
+          exit-code: '1'
+          ignore-unfixed: true
+          severity: 'CRITICAL,HIGH'
 
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v1
