@@ -9,10 +9,10 @@ workflows:
           account-url: AWS_ECR_ACCOUNT_URL
           region: AWS_DEFAULT_REGION
           repo: 'docker/repo'
-          service-name: 'tracker'
           tag: '${CIRCLE_SHA1}'
       - aws-ecs/deploy-service-update:
           cluster-name: 'myCluster'
+          service-name: 'tracker'
           container-image-name-updates: 'container=${MY_APP_PREFIX}-service,tag=${CIRCLE_SHA1}'
           family: 'Covid19Tracker'
           requires:
