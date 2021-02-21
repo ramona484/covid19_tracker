@@ -2,18 +2,16 @@ version: '2.1'
 orbs:
   aws-ecr: circleci/aws-ecr@6.15
   aws-ecs: circleci/aws-ecs@2.0.0
+
 workflows:
   build-and-deploy:
     jobs:
       - aws-ecr/build-and-push-image:
-          account-url: AWS_ECR_ACCOUNT_URL
-          region: AWS_DEFAULT_REGION
-          repo: 'docker/repo'
-          tag: '${CIRCLE_SHA1}'
+          repo: "${AWS_RESOURCE_NAME_PREFIX}"
+          tag: "${CIRCLE_SHA1}"
       - aws-ecs/deploy-service-update:
-          cluster-name: 'myCluster'
-          service-name: 'tracker'
-          container-image-name-updates: '335319979316.dkr.ecr.us-east-1.amazonaws.com,tag=${CIRCLE_SHA1}'
-          family: 'Covid19Tracker'
           requires:
-            - aws-ecr/build-and-push-image
+            - aws-ecr/build-and-push-image # only run this job once aws-ecr/build-and-push-image has completed
+          family: "${AWS_RESOURCE_NAME_PREFIX}-service"
+          cluster-name: "${AWS_RESOURCE_NAME_PREFIX}-cluster"
+          container-image-name-updates: "container=${AWS_RESOURCE_NAME_PREFIX}-service,tag=${CIRCLE_SHA1}"
