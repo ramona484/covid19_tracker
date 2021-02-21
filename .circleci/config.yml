@@ -11,4 +11,4 @@ workflows:
           account-url: AWS_ECR_ACCOUNT_URL
           region: AWS_DEFAULT_REGION
           repo: 'tracker'
-          tag: '${CIRCLE_SHA1}'
+          tag: 'latest'
