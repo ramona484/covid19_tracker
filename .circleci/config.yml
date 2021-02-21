@@ -16,5 +16,4 @@ workflows:
             - aws-ecr/build-and-push-image # only run this job once aws-ecr/build-and-push-image has completed
           family: "container=${AWS_RESOURCE_NAME_PREFIX}-service,tag='latest'"
           cluster-name: "${AWS_RESOURCE_NAME_PREFIX}-cluster"
-          task-definition-arn: '${TASK_DEFINITION_ARN}'
           container-image-name-updates: "container=${AWS_RESOURCE_NAME_PREFIX}-service,tag='latest',"
