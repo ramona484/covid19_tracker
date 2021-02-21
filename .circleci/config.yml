@@ -14,6 +14,7 @@ workflows:
       - aws-ecs/deploy-service-update:
           requires:
             - aws-ecr/build-and-push-image # only run this job once aws-ecr/build-and-push-image has completed
-          family: "${AWS_RESOURCE_NAME_PREFIX}-service, ${AWS_RESOURCE_NAME_PREFIX}-task-definition"
+          family: "container=${AWS_RESOURCE_NAME_PREFIX}-service,tag='latest'"
+          task-definition: "${AWS_RESOURCE_NAME_PREFIX}"
           cluster-name: "${AWS_RESOURCE_NAME_PREFIX}-cluster"
           container-image-name-updates: "container=${AWS_RESOURCE_NAME_PREFIX}-service,tag='latest',"
