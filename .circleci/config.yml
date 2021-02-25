@@ -99,7 +99,7 @@ workflows:
           filters:
             branches:
               only: master
-      - build and deploy:
+      - build-and-deploy:
           filters:
             branches:
               only: master
