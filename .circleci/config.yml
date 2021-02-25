@@ -6,8 +6,14 @@ orbs:
   aws-ecr: circleci/aws-ecr@6.15
   aws-ecs: circleci/aws-ecs@2.0.0
 
-jobs:
+executors:
+  docker-publisher:
+    environment:
+      IMAGE_NAME: ramona84/covid19-tracker
+    docker:
+      - image: circleci/buildpack-deps:stretch
 
+jobs:
   container-scan:
     docker:
       - image: docker:stable-git
@@ -34,30 +40,16 @@ jobs:
           name: Scan the local image with trivy
           command: trivy --exit-code 0 --no-progress trivy-ci-test:${CIRCLE_SHA1}
 
-  dockle:
-    docker:
-      - image: docker:19.03-git
+  lint:
+    executor: docker/machine
     steps:
       - checkout
-      - setup_remote_docker
-      - run:
-          command: |
-            wget https://github.com/goodwithtech/dockle/releases/download/v0.2.0/dockle_0.2.0_Linux-64bit.tar.gz
-            tar zxvf dockle_0.2.0_Linux-64bit.tar.gz
-            mv dockle /usr/local/bin
-      - run:
-          command: |
-            dockle --exit-code 0 python:3.4-alpine
+      - docker/dockerlint:
+          dockerfile: /Dockerfile
+          treat-warnings-as-errors: true
 
-    lint:
-      executor: docker/machine
-      steps:
-        - checkout
-        - docker/dockerlint:
-            dockerfile: /Dockerfile
-            treat-warnings-as-errors: true
 
-    build-and-deploy:
+  build-and-deploy:
       - aws-ecr/build-and-push-image:
           repo: "${AWS_RESOURCE_NAME_PREFIX}"
           tag: 'latest'
@@ -82,10 +74,6 @@ workflows:
           name: ggshield-scan
           base_revision: << pipeline.git.base_revision >>
           revision: <<pipeline.git.revision>>
-      - dockle:
-          filters:
-            branches:
-              only: master
       - lint:
           filters:
             branches:
