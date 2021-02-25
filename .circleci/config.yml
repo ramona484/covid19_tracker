@@ -64,18 +64,21 @@ jobs:
             dockerfile: /Dockerfile
             treat-warnings-as-errors: true
 
-  aws-ecr/build-and-push-image:
-    repo: "${AWS_RESOURCE_NAME_PREFIX}"
-    tag: 'latest'
-    account-url: AWS_ECR_ACCOUNT_URL
-    region: AWS_DEFAULT_REGION
-
-  aws-ecs/deploy-service-update:
-    requires:
-      - aws-ecr/build-and-push-image # only run this job once aws-ecr/build-and-push-image has completed
-    family: "${AWS_RESOURCE_NAME_PREFIX}-service"
-    cluster-name: "${AWS_RESOURCE_NAME_PREFIX}-cluster"
-    container-image-name-updates: "container=${AWS_RESOURCE_NAME_PREFIX}-service,tag='latest'"
+  build-and-deploy:
+    executor: machine
+    steps:
+        - checkout
+        - aws-ecr/build-and-push-image:
+            repo: "${AWS_RESOURCE_NAME_PREFIX}"
+            tag: 'latest'
+            account-url: AWS_ECR_ACCOUNT_URL
+            region: AWS_DEFAULT_REGION
+        - aws-ecs/deploy-service-update:
+          requires:
+           - aws-ecr/build-and-push-image # only run this job once aws-ecr/build-and-push-image has completed
+          family: "${AWS_RESOURCE_NAME_PREFIX}-service"
+          cluster-name: "${AWS_RESOURCE_NAME_PREFIX}-cluster"
+          container-image-name-updates: "container=${AWS_RESOURCE_NAME_PREFIX}-service,tag='latest'"
 
 workflows:
   version: 2
@@ -97,11 +100,7 @@ workflows:
           filters:
             branches:
               only: master
-      - aws-ecr/build-and-push-image:
-          filters:
-            branches:
-              only: master
-      - aws-ecs/deploy-service-update:
+      - build-and-deploy:
           filters:
             branches:
               only: master
