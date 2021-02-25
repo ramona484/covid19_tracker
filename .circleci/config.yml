@@ -6,14 +6,6 @@ orbs:
   docker: circleci/docker@1.5.0
   aws-ecs: circleci/aws-ecs@2.0.0
    
-
-executors:
-  docker-publisher:
-    environment:
-      IMAGE_NAME: ramona84/covid19-tracker
-    docker:
-     - image: circleci/buildpack-deps:stretch
-
 jobs:
   container-scan:
     docker:
@@ -64,22 +56,6 @@ jobs:
             dockerfile: /Dockerfile
             treat-warnings-as-errors: true
 
-  build-and-deploy:
-    executor: machine
-    steps:
-        - checkout
-        - aws-ecr/build-and-push-image:
-            repo: "${AWS_RESOURCE_NAME_PREFIX}"
-            tag: 'latest'
-            account-url: AWS_ECR_ACCOUNT_URL
-            region: AWS_DEFAULT_REGION
-        - aws-ecs/deploy-service-update:
-          requires:
-           - aws-ecr/build-and-push-image # only run this job once aws-ecr/build-and-push-image has completed
-          family: "${AWS_RESOURCE_NAME_PREFIX}-service"
-          cluster-name: "${AWS_RESOURCE_NAME_PREFIX}-cluster"
-          container-image-name-updates: "container=${AWS_RESOURCE_NAME_PREFIX}-service,tag='latest'"
-
 workflows:
   version: 2
   build-master:
@@ -100,7 +76,20 @@ workflows:
           filters:
             branches:
               only: master
-      - build-and-deploy:
-          filters:
-            branches:
-              only: master
+      - aws-ecr/build-and-push-image:
+          repo: "${AWS_RESOURCE_NAME_PREFIX}"
+          tag: 'latest'
+          account-url: AWS_ECR_ACCOUNT_URL
+          region: AWS_DEFAULT_REGION
+           filters:
+             branches:
+               only: master
+      - aws-ecs/deploy-service-update:
+          requires:
+            - aws-ecr/build-and-push-image # only run this job once aws-ecr/build-and-push-image has completed
+          family: "${AWS_RESOURCE_NAME_PREFIX}-service"
+          cluster-name: "${AWS_RESOURCE_NAME_PREFIX}-cluster"
+          container-image-name-updates: "container=${AWS_RESOURCE_NAME_PREFIX}-service,tag='latest'"
+           filters:
+             branches:
+                only: master
