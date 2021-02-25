@@ -65,6 +65,7 @@ jobs:
             treat-warnings-as-errors: true
 
   build-and-deploy:
+    steps:
     - aws-ecr/build-and-push-image:
         repo: "${AWS_RESOURCE_NAME_PREFIX}"
         tag: 'latest'
