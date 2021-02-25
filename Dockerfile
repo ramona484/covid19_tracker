@@ -1,5 +1,8 @@
 # build environment
 FROM node:14.15-stretch as builder
+ARG APP_USER=myapp
+RUN groupadd -r ${APP_USER} && useradd --no-log-init -r -m -g ${APP_USER} ${APP_USER}
+
 WORKDIR /app
 COPY package*.json ./
 RUN npm ci --only=production
