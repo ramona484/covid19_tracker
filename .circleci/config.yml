@@ -72,10 +72,10 @@ workflows:
           name: ggshield-scan
           base_revision: << pipeline.git.base_revision >>
           revision: <<pipeline.git.revision>>
-    - container-scan:
-        filters:
-          branches:
-            only: master
+      - container-scan:
+          filters:
+            branches:
+              only: master
       - aws-ecr/build-and-push-image:
           requires:
             - lint
