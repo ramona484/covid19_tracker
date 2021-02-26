@@ -1,16 +1,14 @@
 # build environment
-FROM node:14.15-stretch as builder
-ARG APP_USER=myapp
-RUN groupadd -r ${APP_USER} && useradd --no-log-init -r -m -g ${APP_USER} ${APP_USER}
+FROM node:latest as builder
 
-WORKDIR /app
-COPY package*.json ./
+WORKDIR app
+ADD package*.json ./
 RUN npm ci --only=production
-COPY . .
+ADD . .
 RUN npm run build
 
 # production environment
-FROM nginx:stable-alpine
+FROM nginx:latest
 COPY --from=builder /app/build /usr/share/nginx/html
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]
