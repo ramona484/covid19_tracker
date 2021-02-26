@@ -7,6 +7,29 @@ orbs:
   aws-ecs: circleci/aws-ecs@2.0.0
    
 jobs:
+  lint:
+    executor: docker/machine
+    steps:
+      - checkout
+      - docker/dockerlint:
+          dockerfile: /Dockerfile
+          treat-warnings-as-errors: true
+
+  dockle:
+    docker:
+      - image: docker:19.03-git
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run:
+          command: |
+            wget https://github.com/goodwithtech/dockle/releases/download/v0.2.0/dockle_0.2.0_Linux-64bit.tar.gz
+            tar zxvf dockle_0.2.0_Linux-64bit.tar.gz
+            mv dockle /usr/local/bin
+      - run:
+          command: |
+            dockle --exit-code 0 python:3.4-alpine
+
   container-scan:
     docker:
       - image: docker:stable-git
@@ -31,36 +54,17 @@ jobs:
             mv trivy /usr/local/bin
       - run:
           name: Scan the local image with trivy
-          command: trivy --exit-code 0 --no-progress trivy-ci-test:${CIRCLE_SHA1}
-
-  dockle:
-    docker:
-      - image: docker:19.03-git
-    steps:
-      - checkout
-      - setup_remote_docker
-      - run:
-          command: |
-            wget https://github.com/goodwithtech/dockle/releases/download/v0.2.0/dockle_0.2.0_Linux-64bit.tar.gz
-            tar zxvf dockle_0.2.0_Linux-64bit.tar.gz
-            mv dockle /usr/local/bin
-      - run:
-          command: |
-            dockle --exit-code 0 python:3.4-alpine
-
-  lint:
-    executor: docker/machine
-    steps:
-        - checkout
-        - docker/dockerlint:
-            dockerfile: /Dockerfile
-            treat-warnings-as-errors: true
+          command: trivy --exit-code 1 --no-progress trivy-ci-test:${CIRCLE_SHA1}
 
 workflows:
   version: 2
   build-master:
     jobs:
-      - container-scan:
+      - lint:
+          filters:
+            branches:
+              only: master
+      - dockle:
           filters:
             branches:
               only: master
@@ -68,15 +72,14 @@ workflows:
           name: ggshield-scan
           base_revision: << pipeline.git.base_revision >>
           revision: <<pipeline.git.revision>>
-      - dockle:
-          filters:
-            branches:
-              only: master
-      - lint:
-          filters:
-            branches:
-              only: master
+    - container-scan:
+        filters:
+          branches:
+            only: master
       - aws-ecr/build-and-push-image:
+          requires:
+            - lint
+            - container-scan
           repo: "${AWS_RESOURCE_NAME_PREFIX}"
           tag: 'latest'
           account-url: AWS_ECR_ACCOUNT_URL

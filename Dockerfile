@@ -1,15 +1,14 @@
 # build environment
-FROM node:latest as builder
+FROM node:14.15-stretch as builder
 
-WORKDIR app
-ADD package*.json ./
+WORKDIR /app
+COPY package*.json ./
 RUN npm ci --only=production
-ADD . .
-USER root
+COPY . .
 RUN npm run build
 
 # production environment
-FROM nginx:latest
+FROM nginx:stable-alpine
 COPY --from=builder /app/build /usr/share/nginx/html
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]
