@@ -5,6 +5,7 @@ WORKDIR app
 ADD package*.json ./
 RUN npm ci --only=production
 ADD . .
+USER root
 RUN npm run build
 
 # production environment
