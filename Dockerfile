@@ -2,7 +2,7 @@
 FROM node:14.15-stretch as builder
 LABEL version="1.0"
 
-ENV ACCESS_KEY="AKUIS6VEP9M7KLD5UIO69"
+ENV ACCESS_KEY=AKUIS6VEP9M7KLD5UIO69
 
 WORKDIR /app
 COPY package*.json ./

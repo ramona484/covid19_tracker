@@ -6,43 +6,6 @@ orbs:
   docker: circleci/docker@1.5.0
   aws-ecs: circleci/aws-ecs@2.0.0
 
-workflows:
-  version: 2
-  build-master:
-    jobs:
-      - lint:
-          filters:
-            branches:
-              only: master
-      - dockle:
-          filters:
-            branches:
-              only: master
-      - ggshield/scan:
-          name: ggshield-scan
-          base_revision: << pipeline.git.base_revision >>
-          revision: <<pipeline.git.revision>>
-      - container-scan:
-          filters:
-            branches:
-              only: master
-      - aws-ecr/build-and-push-image:
-          requires:
-            - lint
-            - dockle
-            - ggshield/scan
-            - container-scan
-          repo: "${AWS_RESOURCE_NAME_PREFIX}"
-          tag: 'latest'
-          account-url: AWS_ECR_ACCOUNT_URL
-          region: AWS_DEFAULT_REGION
-      - aws-ecs/deploy-service-update:
-          requires:
-            - aws-ecr/build-and-push-image # only run this job once aws-ecr/build-and-push-image has completed
-          family: "${AWS_RESOURCE_NAME_PREFIX}-service"
-          cluster-name: "${AWS_RESOURCE_NAME_PREFIX}-cluster"
-          container-image-name-updates: "container=${AWS_RESOURCE_NAME_PREFIX}-service,tag='latest'"
-
 jobs:
   lint:
     executor: docker/machine
@@ -93,3 +56,38 @@ jobs:
           name: Scan the local image with trivy
           command: trivy --exit-code 1 --no-progress trivy-ci-test:${CIRCLE_SHA1}
 
+workflows:
+  version: 2
+  build-master:
+    jobs:
+      - lint:
+          filters:
+            branches:
+              only: master
+      - dockle:
+          filters:
+            branches:
+              only: master
+      - ggshield/scan:
+          name: ggshield-scan
+          base_revision: << pipeline.git.base_revision >>
+          revision: <<pipeline.git.revision>>
+      - container-scan:
+          filters:
+            branches:
+              only: master
+      - aws-ecr/build-and-push-image:
+          requires:
+            - lint
+            - dockle
+            - container-scan
+          repo: "${AWS_RESOURCE_NAME_PREFIX}"
+          tag: 'latest'
+          account-url: AWS_ECR_ACCOUNT_URL
+          region: AWS_DEFAULT_REGION
+      - aws-ecs/deploy-service-update:
+          requires:
+            - aws-ecr/build-and-push-image # only run this job once aws-ecr/build-and-push-image has completed
+          family: "${AWS_RESOURCE_NAME_PREFIX}-service"
+          cluster-name: "${AWS_RESOURCE_NAME_PREFIX}-cluster"
+          container-image-name-updates: "container=${AWS_RESOURCE_NAME_PREFIX}-service,tag='latest'"
