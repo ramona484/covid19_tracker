@@ -5,7 +5,7 @@ on:
       - master
 
 jobs:
-    linting:
+    hadolint:
       runs-on: ubuntu-latest
       steps:
         - name: Checkout
@@ -15,44 +15,59 @@ jobs:
           with:
             dockerfile: Dockerfile
 
+    dockle:
+       runs-on: ubuntu-latest
+       steps:
+        - name: Checkout
+          uses: actions/checkout@v2 
+        - name: Dockle
+          uses: hands-lab/dockle-action@v1
+          with:
+            image: ramona84/covid19_tracker
+            exit-code: '1'
+            exit-level: FATAL
+            
+    secret-scan:
+        runs-on: ubuntu-latest
+        steps:
+        - name: Checkout
+          uses: actions/checkout@v2
+          with:
+            fetch-depth: 0 
+        - name: GitGuardian scan
+          uses: GitGuardian/gg-shield-action@master
+          env:
+            GITHUB_PUSH_BEFORE_SHA: ${{ github.event.before }}
+            GITHUB_PUSH_BASE_SHA: ${{ github.event.base }}
+            GITHUB_PULL_BASE_SHA: ${{ github.event.pull_request.base.sha }}
+            GITHUB_DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
+            GITGUARDIAN_API_KEY: ${{ secrets.GITGUARDIAN_API_KEY }}
+
+    container-scan:
+        needs: hadolint
+        runs-on: ubuntu-latest
+        steps:
+        - name: Checkout
+          uses: actions/checkout@v2
+        - name: Build an image from Dockerfile
+          run: |
+           docker build -t docker.io/my-organization/my-app:${{ github.sha }} .
+      
+        - name: Run Trivy vulnerability scanner
+          uses: aquasecurity/trivy-action@master
+          with:
+            image-ref: 'docker.io/my-organization/my-app:${{ github.sha }}'
+            format: 'table'
+            exit-code: '1'
+            ignore-unfixed: true
+            severity: 'CRITICAL,HIGH'
+
     build:
-      needs: linting
+      needs: container-scan
       runs-on: ubuntu-latest
       steps:
       - name: Checkout
         uses: actions/checkout@v2
-        with:
-          fetch-depth: 0 
-               
-      - name: Dockle
-        uses: hands-lab/dockle-action@v1
-        with:
-          image: ramona84/covid19_tracker
-          exit-code: '1'
-          exit-level: FATAL
-
-      - name: GitGuardian scan
-        uses: GitGuardian/gg-shield-action@master
-        env:
-          GITHUB_PUSH_BEFORE_SHA: ${{ github.event.before }}
-          GITHUB_PUSH_BASE_SHA: ${{ github.event.base }}
-          GITHUB_PULL_BASE_SHA: ${{ github.event.pull_request.base.sha }}
-          GITHUB_DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
-          GITGUARDIAN_API_KEY: ${{ secrets.GITGUARDIAN_API_KEY }}
-
-
-      - name: Build an image from Dockerfile
-        run: |
-          docker build -t docker.io/my-organization/my-app:${{ github.sha }} .
-      
-      - name: Run Trivy vulnerability scanner
-        uses: aquasecurity/trivy-action@master
-        with:
-          image-ref: 'docker.io/my-organization/my-app:${{ github.sha }}'
-          format: 'table'
-          exit-code: '1'
-          ignore-unfixed: true
-          severity: 'CRITICAL,HIGH'
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
