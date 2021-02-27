@@ -1,13 +1,24 @@
 name: push to Docker Hub
 on:
   push:
-    branches: master
+    branches:
+      - master
 
 jobs:
-  path-context:
-    runs-on: ubuntu-latest
-    steps:
-      
+    linting:
+      runs-on: ubuntu-latest
+      steps:
+        - name: Checkout
+          uses: actions/checkout@v2
+        - name: Dockerfile linting
+          uses: brpaz/hadolint-action@v1.2.1
+          with:
+            dockerfile: Dockerfile
+
+    build:
+      needs: linting
+      runs-on: ubuntu-latest
+      steps:
       - name: Checkout
         uses: actions/checkout@v2
         with:
@@ -19,12 +30,7 @@ jobs:
           image: ramona84/covid19_tracker
           exit-code: '1'
           exit-level: FATAL
-          
-      - name: Dockerfile linting  
-        uses: brpaz/hadolint-action@v1.2.1
-        with:
-          dockerfile: Dockerfile    
-          
+
       - name: GitGuardian scan
         uses: GitGuardian/gg-shield-action@master
         env:
