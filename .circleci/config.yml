@@ -27,6 +27,9 @@ workflows:
             branches:
               only: master
       - aws-ecr/build-and-push-image:
+          requires:
+            - lint
+            - container-scan
           repo: "${AWS_RESOURCE_NAME_PREFIX}"
           tag: 'latest'
           account-url: AWS_ECR_ACCOUNT_URL
