@@ -74,3 +74,5 @@ jobs:
           platforms: linux/amd64
           push: true
           tags: ramona84/covid19_tracker:latest
+
+       
