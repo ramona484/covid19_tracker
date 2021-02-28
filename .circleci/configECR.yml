@@ -6,7 +6,6 @@ orbs:
   aws-ecr: circleci/aws-ecr@6.15
   aws-ecs: circleci/aws-ecs@2.0.0
 
-  ACCESS_KEY_ID=AKUIS6VEP9M7KLD5UIO69
 
 executors:
   docker-publisher:
