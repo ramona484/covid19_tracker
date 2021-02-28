@@ -1,5 +1,5 @@
 # build environment
-FROM node:14-buster as builder
+FROM node:12.21.0-alpine3.10 as builder
 LABEL version="1.0"
 
 
