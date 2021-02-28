@@ -47,6 +47,8 @@ jobs:
         needs: secret-scan
         runs-on: ubuntu-latest
         steps:
+        - name: Checkout
+          uses: actions/checkout@v2
         - name: Build an image from Dockerfile
           run: |
            docker build -t docker.io/my-organization/my-app:${{ github.sha }} .
