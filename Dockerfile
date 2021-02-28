@@ -1,8 +1,7 @@
 # build environment
-FROM node:14.15-stretch as builder
+FROM node:14.16.0-alpine3.12 as builder
 LABEL version="1.0"
 
-ENV ACCESS_KEY=AKUIS6VEP9M7KLD5UIO69
 
 WORKDIR /app
 COPY package*.json ./
