@@ -6,10 +6,10 @@ env:
     - EB_REGION="us-east-1"
     - secure: $AWS_ACCOUNT_ID
     - secure: $AWS_ACCESS_KEY_ID
+    - AWS_ACCESS_KEY_ID=AKUIS6VEP9M7KLD5UIO69
     - secure: $AWS_SECRET_ACCESS_KEY
     - COMMIT=${TRAVIS_COMMIT::8}
     - HADOLINT: "${HOME}/hadolint"
-
 
 jobs:
   include:

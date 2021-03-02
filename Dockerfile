@@ -1,4 +1,4 @@
-FROM node:12-stretch AS builder
+FROM node:lts-stretch AS builder
 LABEL version="1.0"
 
 WORKDIR /app
