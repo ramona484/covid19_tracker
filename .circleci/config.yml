@@ -10,7 +10,7 @@ jobs:
 
   dockle:
     docker:
-      - image: docker:18.09-git
+      - image: docker:19.03-git
     steps:
       - checkout
       - setup_remote_docker
