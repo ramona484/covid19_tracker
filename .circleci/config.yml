@@ -7,13 +7,6 @@ orbs:
   aws-ecs: circleci/aws-ecs@2.0.0
 
 jobs:
-  lint:
-    executor: docker/machine
-    steps:
-      - checkout
-      - docker/dockerlint:
-          dockerfile: /Dockerfile
-          treat-warnings-as-errors: true
 
   dockle:
     docker:
@@ -64,10 +57,6 @@ workflows:
               dockerfiles: Dockerfile
               ignore-rules: DL4005,DL3008
               trusted-registries: docker.io
-      - lint:
-          filters:
-            branches:
-              only: master
       - dockle:
           filters:
             branches:
@@ -82,7 +71,7 @@ workflows:
               only: master
       - aws-ecr/build-and-push-image:
           requires:
-            - lint
+            - docker/hadolint
             - dockle
             - container-scan
           repo: "${AWS_RESOURCE_NAME_PREFIX}"
