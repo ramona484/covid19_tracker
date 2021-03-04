@@ -11,7 +11,7 @@ RUN npm run build
 FROM aquasec/trivy:0.16.0 AS vulnscan
 RUN trivy filesystem --exit-code 0 --no-progress /
 
-FROM nginx:stable-alpine AS production
+FROM nginx:mainline AS production
 COPY --from=builder /app/build /usr/share/nginx/html
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]
