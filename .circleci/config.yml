@@ -15,20 +15,13 @@ jobs:
       - checkout
       - setup_remote_docker
       - run:
-          name: Install dockle
-          command: |
-              apk add --update curl
-              VERSION=$(
-                curl -I "https://github.com/goodwithtech/dockle/releases/latest" | \
-                grep 'Location' | \
-                sed -E 's/.*v([0-9\.]+).*$/\1/'
-              )
-              wget https://github.com/goodwithtech/dockle/releases/download/v${VERSION}/dockle_${VERSION}_Linux-64bit.tar.gz
-              tar zxvf dockle_${VERSION}_Linux-64bit.tar.gz
-              mv dockle /usr/local/bin
+          command:|
+          wget https://github.com/goodwithtech/dockle/releases/download/v0.2.0/dockle_0.2.0_Linux-64bit.tar.gz
+          tar zxvf dockle_0.2.0_Linux-64bit.tar.gz
+          mv dockle /usr/local/bin
       - run:
-          name: Scan the local image with Dockle
-          command: dockle --exit-code 1 dockle-ci-test:${CIRCLE_SHA1}
+          command: |
+            dockle --exit-code 0 python:3.4-alpine
 
   container-scan:
     docker:
