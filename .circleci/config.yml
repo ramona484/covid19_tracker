@@ -61,9 +61,9 @@ workflows:
   build-master:
     jobs:
       - docker/hadolint:
-              dockerfiles: '/Dockerfile'
-              ignore-rules: 'DL4005,DL3008'
-              trusted-registries: 'docker.io'
+              dockerfiles: /Dockerfile
+              ignore-rules: DL4005,DL3008
+              trusted-registries: docker.io
       - lint:
           filters:
             branches:
