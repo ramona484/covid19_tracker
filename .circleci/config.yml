@@ -73,7 +73,7 @@ workflows:
           requires:
             - docker/hadolint
             - dockle
-            - ggshield/scan
+            - ggshield-scan
             - container-scan
           repo: "${AWS_RESOURCE_NAME_PREFIX}"
           tag: 'latest'
