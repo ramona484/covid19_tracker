@@ -1,5 +1,5 @@
 FROM node:lts-buster-slim AS builder
-LABEL version="1.0"
+LABEL version="ramona.rettig@t-online.de"
 
 WORKDIR /app
 COPY package*.json ./
