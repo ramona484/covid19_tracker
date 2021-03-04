@@ -15,9 +15,6 @@ jobs:
       - checkout
       - setup_remote_docker
       - run:
-          name: Build image
-          command: docker build -t dockle-ci-test:${CIRCLE_SHA1} .
-      - run:
           name: Install dockle
           command: |
               apk add --update curl
