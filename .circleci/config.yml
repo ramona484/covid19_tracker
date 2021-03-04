@@ -17,7 +17,7 @@ jobs:
       - run:
           command: |
             wget https://github.com/goodwithtech/dockle/releases/download/v0.2.0/dockle_0.2.0_Linux-64bit.tar.gz
-            tar zxvf dockle_0.2.0_Linux-64bit.tar.gz
+            tar zxvf dockle_0.3.11 _Linux-64bit.tar.gz
             mv dockle /usr/local/bin
       - run:
           command: |
