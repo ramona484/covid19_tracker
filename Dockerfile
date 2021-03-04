@@ -1,13 +1,13 @@
-FROM node:latest as builder
-RUN apt-get update
-WORKDIR app
-ADD package*.json ./
+FROM node:lts-buster-slim AS builder
+LABEL version="ramona.rettig@t-online.de"
 
-RUN npm ci --only=production
-ADD . .
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci --production
+COPY . .
 RUN npm run build
 
-FROM nginx:latest
+FROM nginx:alpine-stable AS production
 COPY --from=builder /app/build /usr/share/nginx/html
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]
