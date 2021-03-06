@@ -2,9 +2,9 @@ FROM node:lts-buster-slim AS builder
 LABEL version="ramona.rettig@t-online.de"
 
 WORKDIR /app
-COPY package*.json ./
+ADD package*.json ./
 RUN npm ci --production
-COPY . .
+ADD . .
 RUN npm run build
 
 FROM nginx:stable-alpine AS production
