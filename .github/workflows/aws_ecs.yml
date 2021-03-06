@@ -1,4 +1,4 @@
-name: push to Docker Hub
+name: update AWS ECS service
 on:
   push:
     branches:
@@ -16,7 +16,6 @@ jobs:
             dockerfile: Dockerfile
 
     dockle:
-       needs: hadolint
        runs-on: ubuntu-latest
        steps:
        - name: Dockle
@@ -27,7 +26,6 @@ jobs:
             exit-level: FATAL
             
     secret-scan:
-        needs: dockle
         runs-on: ubuntu-latest
         steps:
         - name: Checkout
@@ -44,7 +42,6 @@ jobs:
             GITGUARDIAN_API_KEY: ${{ secrets.GITGUARDIAN_API_KEY }}
 
     container-scan:
-        needs: secret-scan
         runs-on: ubuntu-latest
         steps:
         - name: Checkout
