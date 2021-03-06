@@ -16,8 +16,8 @@ sudo chmod +x /usr/bin/ecs-deploy
 eval $(aws ecr get-login --region us-east-1)
 
 # build the docker image and push to an image repository
-docker build -t haoliangyu/ecs-auto-deploy .
-docker tag haoliangyu/ecs-auto-deploy:latest $IMAGE_REPO_URL:latest
+docker build -t tracker .
+docker tag tracker:latest $IMAGE_REPO_URL:latest
 docker push $IMAGE_REPO_URL:latest
 
 # update an AWS ECS service with the new image

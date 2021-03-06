@@ -1,9 +1,7 @@
 sudo: required
-
 env:
   global:
-    - DOCKER_REPO=docker/repo
-    - EB_REGION="us-east-1"
+    - secure: $AWS_DEFAULT_REGION
     - secure: $AWS_ACCOUNT_ID
     - secure: $AWS_ACCESS_KEY_ID
     - secure: $AWS_SECRET_ACCESS_KEY
