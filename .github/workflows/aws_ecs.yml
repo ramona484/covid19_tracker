@@ -27,7 +27,7 @@ jobs:
             exit-level: FATAL
             
     secret-scan:
-        needs: hadolint 
+        needs: dockle 
         runs-on: ubuntu-latest
         steps:
         - name: Checkout
