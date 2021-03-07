@@ -16,6 +16,7 @@ jobs:
             dockerfile: Dockerfile
 
     dockle:
+       needs: hadolint 
        runs-on: ubuntu-latest
        steps:
        - name: Dockle
@@ -26,6 +27,7 @@ jobs:
             exit-level: FATAL
             
     secret-scan:
+        needs: hadolint 
         runs-on: ubuntu-latest
         steps:
         - name: Checkout
@@ -42,6 +44,7 @@ jobs:
             GITGUARDIAN_API_KEY: ${{ secrets.GITGUARDIAN_API_KEY }}
 
     container-scan:
+        needs: secret-scan
         runs-on: ubuntu-latest
         steps:
         - name: Checkout
@@ -63,6 +66,8 @@ jobs:
       needs: container-scan
       runs-on: ubuntu-latest
       steps:
+      - name: Checkout
+        uses: actions/checkout@v2
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
