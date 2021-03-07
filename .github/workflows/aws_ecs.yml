@@ -16,6 +16,7 @@ jobs:
             dockerfile: Dockerfile
 
     dockle:
+       needs: hadolint 
        runs-on: ubuntu-latest
        steps:
        - name: Dockle
