@@ -1,4 +1,4 @@
-FROM node:lts-buster-slim AS builder
+FROM node:14-stretch AS builder
 LABEL version="ramona.rettig@t-online.de"
 
 WORKDIR /app
