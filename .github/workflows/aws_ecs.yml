@@ -110,7 +110,7 @@ jobs:
         with:
           task-definition: ${{ steps.task-def.outputs.task-definition }}
           service: tracker
-          cluster: tracker-cluster
+          cluster: myCluster
           wait-for-service-stability: true
 
       
