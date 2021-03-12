@@ -1,8 +1,6 @@
 os: linux
 language: node_js
 dist: xenial
-services:
-  - docker
 
 env:
   global:
@@ -50,8 +48,6 @@ jobs:
         - curl -sL -o ${HADOLINT} "https://github.com/hadolint/hadolint/releases/download/v1.17.6/hadolint-$(uname -s)-$(uname -m)"
           && chmod 700 ${HADOLINT}
 
-      before_script:
-        - npm install
       script:
         - ./dockle --exit-code 0 dockle-ci-test:${COMMIT}
         - git ls-files --exclude='Dockerfile*' --ignored | xargs --max-lines=1 ${HADOLINT}
