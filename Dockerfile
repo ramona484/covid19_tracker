@@ -1,4 +1,5 @@
 FROM node:14-stretch AS builder
+LABEL version="ramona.rettig@t-online.de"
 
 WORKDIR /app
 COPY package*.json ./
