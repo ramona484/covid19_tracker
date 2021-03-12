@@ -3,14 +3,17 @@ language: node_js
 dist: xenial
 services:
   - docker
+
 env:
   global:
     - secure: $AWS_DEFAULT_REGION
+    - secure: $AWS_ACCOUNT_ID
     - secure: $AWS_ACCOUNT_ID
     - secure: $AWS_ACCESS_KEY_ID
     - secure: $AWS_SECRET_ACCESS_KEY
     - COMMIT=${TRAVIS_COMMIT::8}
     - HADOLINT: "${HOME}/hadolint"
+
 
 jobs:
   include:
@@ -22,51 +25,54 @@ jobs:
       script:
         - ggshield scan ci
 
-    - name: hadolint
-      sudo: false
-      # Use generic image to cut start-up time
-      language: generic
-      install:
-        - curl -sL -o ${HADOLINT} "https://github.com/hadolint/hadolint/releases/download/v1.17.6/hadolint-$(uname -s)-$(uname -m)"
-          && chmod 700 ${HADOLINT}
-      script:
-        - git ls-files --exclude='Dockerfile*' --ignored | xargs --max-lines=1 ${HADOLINT}
+    - name: security tests
+      language: node_js
+      node_js:
+        - "14"
 
-    - name: dockle
+      dist: trusty
+
       services:
         - docker
+
       before_install:
+        - export PATH=$PATH:$HOME/.local/bin
+        - docker build -t trivy-ci-test:${COMMIT} .
+        - export VERSION=$(curl --silent "https://api.github.com/repos/aquasecurity/trivy/releases/latest" | grep '"tag_name":' | sed -E 's/.*"v([^"]+)".*/\1/')
+        - wget https://github.com/aquasecurity/trivy/releases/download/v${VERSION}/trivy_${VERSION}_Linux-64bit.tar.gz
+        - tar zxvf trivy_${VERSION}_Linux-64bit.tar.gz
         - docker build -t dockle-ci-test:${COMMIT} .
         - export VERSION=$(curl --silent "https://api.github.com/repos/goodwithtech/dockle/releases/latest" | grep '"tag_name":' | sed -E 's/.*"v([^"]+)".*/\1/')
         - wget https://github.com/goodwithtech/dockle/releases/download/v${VERSION}/dockle_${VERSION}_Linux-64bit.tar.gz
         - tar zxvf dockle_${VERSION}_Linux-64bit.tar.gz
-      script:
-        - ./dockle --exit-code 1 dockle-ci-test:${COMMIT}
 
-    - name: trivy
-      services:
-         - docker
-      before_install:
-         - docker build -t trivy-ci-test:${COMMIT} .
-         - export VERSION=$(curl --silent "https://api.github.com/repos/aquasecurity/trivy/releases/latest" | grep '"tag_name":' | sed -E 's/.*"v([^"]+)".*/\1/')
-         - wget https://github.com/aquasecurity/trivy/releases/download/v${VERSION}/trivy_${VERSION}_Linux-64bit.tar.gz
-         - tar zxvf trivy_${VERSION}_Linux-64bit.tar.gz
+      install:
+        - curl -sL -o ${HADOLINT} "https://github.com/hadolint/hadolint/releases/download/v1.17.6/hadolint-$(uname -s)-$(uname -m)"
+          && chmod 700 ${HADOLINT}
+
+      before_script:
+        - npm install
       script:
-         - ./trivy --exit-code 0 --severity HIGH --no-progress trivy-ci-test:${COMMIT}
-         - ./trivy --exit-code 1 --severity CRITICAL --no-progress trivy-ci-test:${COMMIT}
-       cache:
-         directories:
-           - $HOME/.cache/trivy
+        - ./dockle --exit-code 0 dockle-ci-test:${COMMIT}
+        - git ls-files --exclude='Dockerfile*' --ignored | xargs --max-lines=1 ${HADOLINT}
+        - ./trivy --exit-code 0 --severity HIGH --no-progress trivy-ci-test:${COMMIT}
+        - ./trivy --exit-code 1 --severity CRITICAL --no-progress trivy-ci-test:${COMMIT}
 
       deploy:
-         provider: script
-         script: bash deploy.sh
-         on:
-            branch: master
+        provider: script
+        script: bash deploy.sh
+        on:
+          branch: master
 
       cache:
-         directories:
-           - $HOME/.cache/trivy
+        directories:
+          - $HOME/.cache/trivy
+
+
+
+
+
+
 
 
 
