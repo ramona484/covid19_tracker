@@ -1,13 +1,13 @@
-FROM node:lts-buster-slim AS builder
-LABEL version="ramona.rettig@t-online.de"
-
+FROM node:latest AS builder
+RUN apt-get update
 WORKDIR app
-COPY package*.json ./
+ADD package*.json ./
+
 RUN npm ci --production
-COPY . .
+ADD . .
 RUN npm run build
 
-FROM nginx:1.18 AS production
+FROM nginx:latest AS production
 COPY --from=builder /app/build /usr/share/nginx/html
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]
