@@ -1,5 +1,4 @@
 FROM node:lts-alpine3.13 AS builder
-LABEL version="jane.doe@outlook.com"
 WORKDIR /app
 COPY package*.json ./
 
