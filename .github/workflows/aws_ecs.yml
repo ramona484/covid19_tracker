@@ -59,7 +59,7 @@ jobs:
             image-ref: 'docker.io/my-organization/my-app:${{ github.sha }}'
             format: 'table'
             exit-code: '1'
-            ignore-unfixed: false
+            ignore-unfixed: true
             vuln-type: 'os,library'
             severity: 'CRITICAL,HIGH'
            
