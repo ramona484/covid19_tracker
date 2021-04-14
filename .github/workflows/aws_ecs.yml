@@ -60,8 +60,7 @@ jobs:
             format: 'table'
             exit-code: '1'
             ignore-unfixed: true
-            severity: 'HIGH'
-
+           
     build:
       needs: container-scan
       runs-on: ubuntu-latest
