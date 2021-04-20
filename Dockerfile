@@ -7,7 +7,7 @@ RUN npm ci --production
 COPY . .
 RUN npm run build
 
-FROM nginx:nginx:1.18-perl AS production
+FROM nginx:1.18-perl AS production
 COPY --from=builder /app/build /usr/share/nginx/html
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]
